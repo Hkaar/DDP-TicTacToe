@@ -9,7 +9,7 @@ void draw_board(char board[])
 {
     system("cls"); // Membersihkan layar (Windows)
     printf("\e[0;37m-----------------------------\n");
-    printf("----Pilih antara 1 dan 3, contoh: 11, 12, 13, 21, 22, 23, 31, 32, 33-----\n");
+    printf("Pilih antara 1 dan 3, contoh: 11, 12, 13, 21, 22, 23, 31, 32, 33\n");
     printf("# 1 2 3\n");
 
     // Baris
@@ -37,11 +37,11 @@ void init_board(char board[])
 
 // Menempatkan tanda pemain ke papan
 // Mengembalikan true jika berhasil, false jika posisi tidak valid atau sudah terisi
-bool place(char board[], char player)
+bool place(char board[], char player, char *namapemain)
 {
     char posinput[64];
 
-    printf("%c, masukkan posisi kamu (xy, contoh: 11): ", player);
+    printf("%s, masukkan posisi kamu (xy, contoh: 11): ", namapemain);
     scanf("%s", posinput);
 
     int row = (posinput[0] - '0') - 1;
@@ -116,7 +116,10 @@ int main()
             printf("Skor saat ini: \e[1;32m(X) %s = \e[0;37m%d | \e[1;31m(O) %s = \e[0;37m%d\n",
                    nama_pemain[0], poin[0], nama_pemain[1], poin[1]);
 
-            if (place(board, player))
+            char namapemain[50];
+            sprintf(namapemain, "%s", (player == 'x') ? nama_pemain[0] : nama_pemain[1]);
+
+            if (place(board, player, namapemain))
             {
                 if (check(board, player))
                 {

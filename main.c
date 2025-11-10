@@ -4,121 +4,163 @@
 
 #define SIZE 3
 
-// Draws the board along with rows/cols, numbered.
+// Menampilkan papan permainan beserta nomor baris dan kolom
 void draw_board(char board[])
 {
-	system("cls");
+    system("cls"); // Membersihkan layar (Windows)
     printf("-----------------------------\n");
-    printf("----Pick around 1 and 3, example 11, 12, 13, 21, 22, 23, 31, 32, 33-----\n");
-	printf("# 1 2 3\n");
+    printf("----Pilih antara 1 dan 3, contoh: 11, 12, 13, 21, 22, 23, 31, 32, 33-----\n");
+    printf("# 1 2 3\n");
 
-	// Rows
-	for (int i = 0, n = 0; i < SIZE; i++)
-	{
-		// Columns
-		printf("%d ", i + 1);
-		for (int j = 0; j < SIZE; j++)
-		{
-			printf("%c ", board[n]);
-			n++;
-		}
-		printf("\n");
-	}
+    // Baris
+    for (int i = 0, n = 0; i < SIZE; i++)
+    {
+        // Kolom
+        printf("%d ", i + 1);
+        for (int j = 0; j < SIZE; j++)
+        {
+            printf("%c ", board[n]);
+            n++;
+        }
+        printf("\n");
+    }
 }
 
-// Initializes board to '-' characters.
+// Menginisialisasi papan dengan karakter '-'
 void init_board(char board[])
 {
-	for (int i = 0; i <  SIZE * SIZE; i++)
-	{
-		board[i] = '-';
-	}
+    for (int i = 0; i < SIZE * SIZE; i++)
+    {
+        board[i] = '-';
+    }
 }
 
-// Returns true if the piece was successfully placed,
-// false if the position was invalid or already taken.
+// Menempatkan tanda pemain ke papan
+// Mengembalikan true jika berhasil, false jika posisi tidak valid atau sudah terisi
 bool place(char board[], char player)
 {
-	char posinput[64];
+    char posinput[64];
 
-	printf("%c, pick your position (xy, rc): ", player);
-	scanf("%s", posinput); // <-- I realise that this is potentially bad, but realistically, 
-						   // the user would have to be trying to break something, and
-	                       // this is just a little program I made for practice.
+    printf("%c, masukkan posisi kamu (xy, contoh: 11): ", player);
+    scanf("%s", posinput);
 
-	int row = (posinput[0] - '0') - 1;
-	int col = (posinput[1] - '0') - 1;
+    int row = (posinput[0] - '0') - 1;
+    int col = (posinput[1] - '0') - 1;
 
-	int pos = col + row * SIZE;
+    int pos = col + row * SIZE;
 
-	if (pos >= 0 && pos < SIZE * SIZE)
-	{
-		if (board[pos] == 'x' || board[pos] == 'o')
-			return false;
+    if (pos >= 0 && pos < SIZE * SIZE)
+    {
+        if (board[pos] == 'x' || board[pos] == 'o')
+            return false;
 
-		board[pos] = player;
-		return true;
-	}
+        board[pos] = player;
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
-// Returns true if there are three of the same chars in a row.
-// b = board, p = player. Shortened for readability.
-bool check(char b[], char p) 
+// Mengecek apakah ada tiga tanda yang sama dalam satu garis
+bool check(char b[], char p)
 {
-	// Check rows
-	if (b[0] == p && b[1] == p && b[2] == p)
-		return true;
-	if (b[3] == p && b[4] == p && b[5] == p)
-		return true;
-	if (b[6] == p && b[7] == p && b[8] == p)
-		return true;
+    // Mengecek baris
+    if (b[0] == p && b[1] == p && b[2] == p)
+        return true;
+    if (b[3] == p && b[4] == p && b[5] == p)
+        return true;
+    if (b[6] == p && b[7] == p && b[8] == p)
+        return true;
 
+    // Mengecek kolom
+    if (b[0] == p && b[3] == p && b[6] == p)
+        return true;
+    if (b[1] == p && b[4] == p && b[7] == p)
+        return true;
+    if (b[2] == p && b[5] == p && b[8] == p)
+        return true;
 
-	// Check columns
-	if (b[0] == p && b[3] == p && b[6] == p)
-		return true;
-	if (b[1] == p && b[4] == p && b[7] == p)
-		return true;
-	if (b[2] == p && b[5] == p && b[8] == p)
-		return true;
+    // Mengecek diagonal
+    if (b[0] == p && b[4] == p && b[8] == p)
+        return true;
+    if (b[2] == p && b[4] == p && b[6] == p)
+        return true;
 
-
-	// Check diagonals
-	if (b[0] == p && b[4] == p && b[8] == p)
-		return true;
-	if (b[2] == p && b[4] == p && b[6] == p)
-		return true;
-
-	// If no one won, return false
-	return false;
+    // Jika belum ada pemenang
+    return false;
 }
 
 int main()
 {
-	char board[SIZE * SIZE];
-	char player = 'x';
-	init_board(board);
+    char board[SIZE * SIZE];
+    char player = 'x';
+    char nama_pemain[2][50]; // Menyimpan nama dua pemain
+    int poin[2] = {0, 0};    // Array untuk menyimpan poin kedua pemain
 
-	while (true)
-	{
-		draw_board(board);
-		
-		if (place(board, player))
-		{
-			if (check(board, player))
-				break;
+    printf("Masukkan nama Player 1 (X): ");
+    scanf("%s", nama_pemain[0]);
+    printf("Masukkan nama Player 2 (O): ");
+    scanf("%s", nama_pemain[1]);
 
-			if (player == 'x')
-				player = 'o';
-			else
-				player = 'x';
-		}
-	}
+    bool lanjut = true;
+    char ulang;
 
-	draw_board(board);
-	printf("-----------------------------\n");
-	printf("Player %c wins!!!\n", player);
-	printf("-----------------------------\n");
+    while (lanjut)
+    {
+        init_board(board);
+        player = 'x';
+
+        while (true)
+        {
+            draw_board(board);
+            printf("Skor saat ini: %s = %d | %s = %d\n",
+                   nama_pemain[0], poin[0], nama_pemain[1], poin[1]);
+
+            if (place(board, player))
+            {
+                if (check(board, player))
+                {
+                    draw_board(board);
+                    printf("-----------------------------\n");
+                    if (player == 'x')
+                    {
+                        printf("%s menang!\n", nama_pemain[0]);
+                        poin[0]++;
+                    }
+                    else
+                    {
+                        printf("%s menang!\n", nama_pemain[1]);
+                        poin[1]++;
+                    }
+                    printf("-----------------------------\n");
+                    break;
+                }
+
+                // Ganti pemain
+                player = (player == 'x') ? 'o' : 'x';
+            }
+            else
+            {
+                printf("Posisi tidak valid atau sudah terisi, coba lagi!\n");
+                system("pause");
+            }
+        }
+
+        // Tanya apakah ingin bermain lagi
+        printf("Ingin bermain lagi? (y/n): ");
+        scanf(" %c", &ulang);
+
+        if (ulang != 'y' && ulang != 'Y')
+        {
+            lanjut = false;
+            printf("\n-----------------------------\n");
+            printf("Permainan selesai!\n");
+            printf("Skor akhir:\n");
+            printf("%s: %d poin\n", nama_pemain[0], poin[0]);
+            printf("%s: %d poin\n", nama_pemain[1], poin[1]);
+            printf("-----------------------------\n");
+        }
+    }
+
+    return 0;
 }

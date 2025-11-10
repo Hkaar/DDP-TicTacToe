@@ -8,7 +8,7 @@
 void draw_board(char board[])
 {
     system("cls"); // Membersihkan layar (Windows)
-    printf("-----------------------------\n");
+    printf("\e[0;37m-----------------------------\n");
     printf("----Pilih antara 1 dan 3, contoh: 11, 12, 13, 21, 22, 23, 31, 32, 33-----\n");
     printf("# 1 2 3\n");
 
@@ -97,9 +97,9 @@ int main()
     char nama_pemain[2][50]; // Menyimpan nama dua pemain
     int poin[2] = {0, 0};    // Array untuk menyimpan poin kedua pemain
 
-    printf("Masukkan nama Player 1 (X): ");
+    printf("\e[1;32mMasukkan nama Player 1 (X): ");
     scanf("%s", nama_pemain[0]);
-    printf("Masukkan nama Player 2 (O): ");
+    printf("\e[1;31mMasukkan nama Player 2 (O): ");
     scanf("%s", nama_pemain[1]);
 
     bool lanjut = true;
@@ -113,7 +113,7 @@ int main()
         while (true)
         {
             draw_board(board);
-            printf("Skor saat ini: %s = %d | %s = %d\n",
+            printf("Skor saat ini: \e[1;32m(X) %s = \e[0;37m%d | \e[1;31m(O) %s = \e[0;37m%d\n",
                    nama_pemain[0], poin[0], nama_pemain[1], poin[1]);
 
             if (place(board, player))
@@ -158,6 +158,18 @@ int main()
             printf("Skor akhir:\n");
             printf("%s: %d poin\n", nama_pemain[0], poin[0]);
             printf("%s: %d poin\n", nama_pemain[1], poin[1]);
+            if (poin[0] > poin[1])
+            {
+                printf("Pemenang keseluruhan: %s!\n", nama_pemain[0]);
+            }
+            else if (poin[1] > poin[0])
+            {
+                printf("Pemenang keseluruhan: %s!\n", nama_pemain[1]);
+            }
+            else
+            {
+                printf("\e[1;32mPermainan berakhir seri!\n");
+            }
             printf("-----------------------------\n");
         }
     }

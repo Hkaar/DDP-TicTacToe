@@ -54,6 +54,8 @@ void gameMenu() {
     char board[BOARD_SIZE * BOARD_SIZE];
     char sign = 'x';
 
+    bool ai = false;
+
     int points[2] = {0, 0};
 
     char *player1 = input("Masukkan nama Player 1 (X): ", 64);
@@ -61,6 +63,16 @@ void gameMenu() {
 
     char *player2 = input("Masukkan nama Player 2 (O): ", 64);
     player2[strcspn(player2, "\n")] = '\0';
+
+    char temp = 'n';
+
+    printf("\nApakah ingin bermain dengan Komputer (O)? (y/n): ");
+    scanf(" %c", &temp);
+    getchar();
+
+    if (temp == 'y') {
+        ai = true;
+    }
 
     bool loopRun = true;
     char repeat;
@@ -96,13 +108,11 @@ void gameMenu() {
             char *pos = input("\nMasukkan posisi kamu (xy, contoh: 11): ", 64);
 
             if (place(board, sign, pos)) {
-                clear_console();
-
                 if (check(board, sign)) {
+                    clear_console();
                     drawBoard(board);
-
                     printf("-----------------------------\n");
-                    
+
                     if (sign == 'x') {
                         printf("%s (X) menang!\n", player1);
                         points[0]++;
@@ -110,21 +120,55 @@ void gameMenu() {
                         printf("%s (O) menang!\n", player2);
                         points[1]++;
                     }
-                    
+
                     printf("-----------------------------\n");
-                    
                     free(pos);
                     break;
                 }
 
                 if (checkTie(board)) {
+                    clear_console();
+                    drawBoard(board);
+                    printf("-----------------------------\n");
                     printf("Setara!\n");
+                    printf("-----------------------------\n");
                     free(pos);
                     break;
                 }
 
-                // Ganti pemain
-                sign = (sign == 'x') ? 'o' : 'x';
+                if (ai && sign == 'x') {
+                    char aiPos[3];
+                    bool validMove = false;
+
+                    while (!validMove) {
+                        sprintf(aiPos, "%d%d", randint(3) + 1, randint(3) + 1);
+                        validMove = place(board, 'o', aiPos);
+                    }
+
+                    if (check(board, 'o')) {
+                        clear_console();
+                        drawBoard(board);
+                        printf("-----------------------------\n");
+                        printf("%s (O) menang!\n", player2);
+                        points[1]++;
+                        printf("-----------------------------\n");
+                        free(pos);
+                        break;
+                    }
+
+                    if (checkTie(board)) {
+                        clear_console();
+                        drawBoard(board);
+                        printf("-----------------------------\n");
+                        printf("Setara!\n");
+                        printf("-----------------------------\n");
+                        free(pos);
+                        break;
+                    }
+                } else {
+                    sign = (sign == 'x') ? 'o' : 'x';
+                }
+
             } else {
                 printf("Posisi tidak valid atau sudah terisi, coba lagi!\n");
                 system("pause");
@@ -189,15 +233,17 @@ void helpMenu() {
     clear_console();
     printf("===============================================================\n");
     printf("                     BANTUAN PERMAINAN                         \n");
-    printf("===============================================================\n\n");
-    
+    printf(
+        "===============================================================\n\n");
+
     printf("CARA BERMAIN\n");
     printf("---------------------------------------------------------------\n");
     printf("1. Tic-Tac-Toe dimainkan oleh 2 pemain secara bergantian\n");
     printf("2. Player 1 menggunakan simbol X, Player 2 menggunakan simbol O\n");
-    printf("3. Tujuan: Susun 3 simbol yang sama secara horizontal, vertikal,\n");
+    printf(
+        "3. Tujuan: Susun 3 simbol yang sama secara horizontal, vertikal,\n");
     printf("   atau diagonal untuk memenangkan permainan\n\n");
-    
+
     printf("MEMASUKKAN POSISI\n");
     printf("---------------------------------------------------------------\n");
     printf("Masukkan 2 angka untuk menentukan posisi:\n");
@@ -207,20 +253,21 @@ void helpMenu() {
     printf("  11 = Baris 1, Kolom 1 (pojok kiri atas)\n");
     printf("  22 = Baris 2, Kolom 2 (tengah)\n");
     printf("  33 = Baris 3, Kolom 3 (pojok kanan bawah)\n\n");
-    
+
     printf("SISTEM POIN\n");
     printf("---------------------------------------------------------------\n");
     printf("  * Setiap kemenangan mendapat 1 poin\n");
     printf("  * Permainan seri tidak menambah poin\n");
     printf("  * Pemain dengan poin terbanyak menjadi pemenang keseluruhan\n\n");
-    
+
     printf("===============================================================\n");
     char *temp = input("\nTekan Enter untuk kembali...", 2);
     free(temp);
 }
 
 void printLogo() {
-    printf("\e[0;32m$$$$$$$$\\ $$\\        $$$$$$$$\\               $$$$$$$$\\         "
+    printf("\e[0;32m$$$$$$$$\\ $$\\        $$$$$$$$\\               $$$$$$$$\\ "
+           "        "
            "         \n");
     printf(
         "\\__$$  __|\\_|        \\__$$  __|              \\__$$  __|         "

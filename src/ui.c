@@ -9,6 +9,7 @@
 void printLogo();
 void gameMenu();
 void helpMenu();
+void secretMenu();
 void drawBoard(char board[]);
 
 void mainMenu() {
@@ -40,6 +41,9 @@ void mainMenu() {
             break;
         case 3:
             running = false;
+            break;
+        case 1998:
+            secretMenu();
             break;
         default:
             printf("Menu code %d doesn't exist!", menu);
@@ -284,4 +288,10 @@ void printLogo() {
            "|\\$$$$$$$\\ \n");
     printf("   \\__|   \\__| \\_______|\\_| \\_______| \\_______|\\__| "
            "\\______/  \\_______|\e[0;37m\n");
+}
+
+void secretMenu() {
+    clear_console();
+    printf("A WIP\n");
+    getchar();
 }

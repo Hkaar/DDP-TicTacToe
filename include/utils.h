@@ -6,4 +6,6 @@
 char* input(char *msg, size_t size);
 void clear_console();
 
+int randint(int n);
+
 #endif

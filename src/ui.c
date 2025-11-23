@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "utils.h"
 #include "core.h"
+#include "utils.h"
 
 void printLogo();
 void gameMenu();
@@ -13,39 +13,39 @@ void drawBoard(char board[]);
 
 void mainMenu() {
     bool running = true;
-    
+
     while (running) {
         clear_console();
         printLogo();
         printf("\n[1] Play Game\n");
         printf("[2] Help\n");
         printf("[3] Quit\n\n");
-        
+
         char *choice = input(">> ", 10);
-        
+
         if (choice == NULL) {
             printf("Error reading input!\n");
             continue;
         }
-        
+
         int menu = atoi(choice);
-        free(choice);  // Don't forget to free the allocated memory!
-        
+        free(choice); // Don't forget to free the allocated memory!
+
         switch (menu) {
-            case 1:
-                gameMenu();
-                break;
-            case 2:
-                helpMenu();
-                break;
-            case 3:
-                running = false;
-                break;
-            default:
-                printf("Menu code %d doesn't exist!", menu);
-                char *temp = input("\nPress Enter to continue...", 2);
-                free(temp);
-                break;
+        case 1:
+            gameMenu();
+            break;
+        case 2:
+            helpMenu();
+            break;
+        case 3:
+            running = false;
+            break;
+        default:
+            printf("Menu code %d doesn't exist!", menu);
+            char *temp = input("\nPress Enter to continue...", 2);
+            free(temp);
+            break;
         }
     }
 }
@@ -53,7 +53,7 @@ void mainMenu() {
 void gameMenu() {
     char board[BOARD_SIZE * BOARD_SIZE];
     char sign = 'x';
-    
+
     int points[2] = {0, 0};
 
     char *player1 = input("Masukkan nama Player 1 (X): ", 64);
@@ -70,111 +70,113 @@ void gameMenu() {
         sign = 'x';
 
         while (true) {
+            clear_console();
+
+            printf("Pilih antara 1 dan 3, contoh: 11, 12, 13, 21, 22, 23, 31, "
+                   "32, 33\n\n");
+
             drawBoard(board);
 
-            printf("\nSkor saat ini: \033[1;32m(X) %s = \033[0;37m%d | \033[1;31m(O) %s = \033[0;37m%d\n",
-                    player1, points[0], player2, points[1]);
-            
-            // Removed unused playerName variable
+            if (sign == 'x') {
+                printf("Skor saat ini: \033[1;32m> (X) %s = \033[0;37m%d | "
+                       "\033[1;31m(O) %s = \033[0;37m%d\n",
+                       player1, points[0], player2, points[1]);
 
-            char *pos = input("Masukkan posisi kamu (xy, contoh: 11): ", 64);
+            } else if (sign == 'o') {
+                printf("Skor saat ini: \033[1;32m(X) %s = \033[0;37m%d | "
+                       "\033[1;31m> (O) %s = \033[0;37m%d\n",
+                       player1, points[0], player2, points[1]);
 
-            if (place(board, sign, pos))
-            {
-                if (check(board, sign))
-                {
+            } else {
+                printf("Skor saat ini: \033[1;32m(X) %s = \033[0;37m%d | "
+                       "\033[1;31m(O) %s = \033[0;37m%d\n",
+                       player1, points[0], player2, points[1]);
+            }
+
+            char *pos = input("\nMasukkan posisi kamu (xy, contoh: 11): ", 64);
+
+            if (place(board, sign, pos)) {
+                clear_console();
+
+                if (check(board, sign)) {
                     drawBoard(board);
+
                     printf("-----------------------------\n");
-                    if (sign == 'x')
-                    {
-                        printf("%s menang!\n", player1);
+                    
+                    if (sign == 'x') {
+                        printf("%s (X) menang!\n", player1);
                         points[0]++;
-                    }
-                    else
-                    {
-                        printf("%s menang!\n", player2);
+                    } else {
+                        printf("%s (O) menang!\n", player2);
                         points[1]++;
                     }
+                    
                     printf("-----------------------------\n");
-                    free(pos); // Free before breaking
+                    
+                    free(pos);
                     break;
                 }
 
-                if (checkTie(board))
-                {
+                if (checkTie(board)) {
                     printf("Setara!\n");
-                    free(pos); // Free before breaking
+                    free(pos);
                     break;
                 }
-                
+
                 // Ganti pemain
                 sign = (sign == 'x') ? 'o' : 'x';
-            }
-            else
-            {
+            } else {
                 printf("Posisi tidak valid atau sudah terisi, coba lagi!\n");
                 system("pause");
             }
-            
-            free(pos); // Free pos after each iteration
+
+            free(pos);
         }
 
-        printf("Ingin bermain lagi? (y/n): ");
+        printf("\nIngin bermain lagi? (y/n): ");
         scanf(" %c", &repeat);
         getchar(); // Clear the newline left by scanf
 
-        if (repeat != 'y' && repeat != 'Y')
-        {
+        if (repeat != 'y' && repeat != 'Y') {
             clear_console();
 
             loopRun = false;
-            printf("\n-----------------------------\n");
-            printf("Permainan selesai!\n\n");
-            printf("Skor akhir:\n");
-            printf("%s: %d poin\n", player1, points[0]);
-            printf("%s: %d poin\n", player2, points[1]);
+            printf("-----------------------------\n");
+            printf("Skor akhir");
+            printf("\n-----------------------------\n\n");
+            printf("(X) %s : %d poin\n", player1, points[0]);
+            printf("(O) %s : %d poin\n", player2, points[1]);
 
-            if (points[0] > points[1])
-            {
-                printf("\nPemenang keseluruhan: %s!\n", player1);
-            }
-            else if (points[1] > points[0])
-            {
-                printf("\nPemenang keseluruhan: %s!\n", player2);
-            }
-            else
-            {
-                printf("\033[1;32mPermainan berakhir seri!\033[0m\n"); // Fixed ANSI code and added reset
+            printf("\n-----------------------------\n");
+
+            if (points[0] > points[1]) {
+                printf("Pemenang keseluruhan: %s!\n", player1);
+            } else if (points[1] > points[0]) {
+                printf("Pemenang keseluruhan: %s!\n", player2);
+            } else {
+                printf("\033[1;32mPermainan berakhir seri!\033[0m\n");
             }
             printf("-----------------------------\n");
-            
+
             char *temp = input("\nPress Enter to continue...", 2);
             free(temp);
         }
     }
-    
-    // Free player names before exiting
+
     free(player1);
     free(player2);
 }
 
 void drawBoard(char board[]) {
-    clear_console();
-
-    printf("\e[0;37m-----------------------------\n");
-    printf("Pilih antara 1 dan 3, contoh: 11, 12, 13, 21, 22, 23, 31, 32, 33\n\n");
-
     printf("=================\n");
     printf("| # | 1 | 2 | 3 |\n");
     printf("-----------------\n");
 
     // Baris
-    for (int i = 0, n = 0; i < BOARD_SIZE; i++)
-    {
+    for (int i = 0, n = 0; i < BOARD_SIZE; i++) {
         // Kolom
         printf("| %d |", i + 1);
-        for (int j = 0; j < BOARD_SIZE; j++)
-        {
+        for (int j = 0; j < BOARD_SIZE; j++) {
             printf(" %c |", board[n]);
             n++;
         }
@@ -185,17 +187,44 @@ void drawBoard(char board[]) {
 
 void helpMenu() {
     clear_console();
-    printf("Help menu:\n");
-    printf("Press [enter] to return...");
-    getchar();
-    fflush(stdin);
+    printf("===============================================================\n");
+    printf("                     BANTUAN PERMAINAN                         \n");
+    printf("===============================================================\n\n");
+    
+    printf("CARA BERMAIN\n");
+    printf("---------------------------------------------------------------\n");
+    printf("1. Tic-Tac-Toe dimainkan oleh 2 pemain secara bergantian\n");
+    printf("2. Player 1 menggunakan simbol X, Player 2 menggunakan simbol O\n");
+    printf("3. Tujuan: Susun 3 simbol yang sama secara horizontal, vertikal,\n");
+    printf("   atau diagonal untuk memenangkan permainan\n\n");
+    
+    printf("MEMASUKKAN POSISI\n");
+    printf("---------------------------------------------------------------\n");
+    printf("Masukkan 2 angka untuk menentukan posisi:\n");
+    printf("  * Angka pertama = baris (1-3)\n");
+    printf("  * Angka kedua = kolom (1-3)\n\n");
+    printf("Contoh:\n");
+    printf("  11 = Baris 1, Kolom 1 (pojok kiri atas)\n");
+    printf("  22 = Baris 2, Kolom 2 (tengah)\n");
+    printf("  33 = Baris 3, Kolom 3 (pojok kanan bawah)\n\n");
+    
+    printf("SISTEM POIN\n");
+    printf("---------------------------------------------------------------\n");
+    printf("  * Setiap kemenangan mendapat 1 poin\n");
+    printf("  * Permainan seri tidak menambah poin\n");
+    printf("  * Pemain dengan poin terbanyak menjadi pemenang keseluruhan\n\n");
+    
+    printf("===============================================================\n");
+    char *temp = input("\nTekan Enter untuk kembali...", 2);
+    free(temp);
 }
 
 void printLogo() {
     printf("$$$$$$$$\\ $$\\        $$$$$$$$\\               $$$$$$$$\\         "
            "         \n");
-    printf("\\__$$  __|\\_|        \\__$$  __|              \\__$$  __|         "
-           "        \n");
+    printf(
+        "\\__$$  __|\\_|        \\__$$  __|              \\__$$  __|         "
+        "        \n");
     printf("   $$ |   $$\\  $$$$$$$\\ $$ | $$$$$$\\   $$$$$$$\\ $$ | $$$$$$\\  "
            " $$$$$$\\  \n");
     printf("   $$ |   $$ |$$  _____|$$ | \\____$$\\ $$  _____|$$ |$$  __$$\\ "

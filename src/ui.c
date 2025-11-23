@@ -29,7 +29,7 @@ void mainMenu() {
         }
 
         int menu = atoi(choice);
-        free(choice); // Don't forget to free the allocated memory!
+        free(choice);
 
         switch (menu) {
         case 1:

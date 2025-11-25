@@ -11,6 +11,7 @@ add_executable(${PROJECT_NAME}
     src/ui.c
     src/core.c
     src/utils.c
+    src/bot.c
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

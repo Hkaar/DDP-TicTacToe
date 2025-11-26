@@ -32,6 +32,21 @@ Run the build script
 `bash`
 
 ```bash
+chmod +x build.sh
+./build.sh
+```
+
+Run the executable
+
+`command prompt`
+
+```batch
+./run.bat
+```
+
+`bash`
+
+```bash
 chmod +x run.sh
 ./run.sh
 ```

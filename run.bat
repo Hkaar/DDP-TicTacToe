@@ -1,0 +1,6 @@
+@echo off
+
+REM Run the executable
+install\bin\ddp_tictactoe.exe
+
+pause

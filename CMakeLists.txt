@@ -18,6 +18,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+install(TARGETS ddp_tictactoe
+    RUNTIME DESTINATION bin)
+
 target_compile_options(${PROJECT_NAME} PRIVATE
     $<$<C_COMPILER_ID:GNU>:-Wall -Wextra>
     $<$<C_COMPILER_ID:MSVC>:/W4>

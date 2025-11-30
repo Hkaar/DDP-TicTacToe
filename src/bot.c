@@ -52,15 +52,23 @@ void findEasyMove(char board[], char *aiPos) {
 /**
  * Algoritma yang berusaha untuk mengalahkan dan menyusahkan pemain (dipakai
  * untuk mode Medium pada)
+ * 
+ * @param board Papan permainan
+ * @param aiPos Pointer posisi ai yang akan di return
+ * @param rSeed Random seed for setting if the algorithm will use random chance
  */
-void findMediumMove(char board[], char *aiPos) {
-    int simplePercentile = randint(100);
+void findMediumMove(char board[], char *aiPos, int rSeed) {
+    if (rSeed != NULL && rSeed > 100) rSeed = 100;
+    
+    if (rSeed != NULL) {
+        int dSeed = randint(100);
 
-    if (simplePercentile > 80) {
-        findEasyMove(board, aiPos);
-        return;
+        if (dSeed > 70) {
+            findEasyMove(board, aiPos);
+            return;
+        }   
     }
-
+    
     // Periksa jika ada posisi musuh yang bisa diblokir
     int winningEnemyPos[][3][2] = {
         {{1, 1}, {1, 2}, {1, 3}}, {{2, 1}, {2, 2}, {2, 3}},
@@ -116,6 +124,17 @@ void findMediumMove(char board[], char *aiPos) {
 }
 
 /**
+ * Algoritma yang berusaha mengalahkan lawan dengan prediksi
+ * menggunakan algoritma minimax (digunakan untuk mode HARD)
+ * 
+ * @param board Papan permainan
+ * @param aiPos Pointer posisi ai yang akan di return
+ */
+void findHardMove(char board[], char *aiPos) {
+    findMediumMove(board, aiPos, 90); // TODO! CHANGE TO USE MINIMAX
+}
+
+/**
  * Dapatkan posisi dari komputer (AI) berdasarkan tingkatan kesusahan
  *
  * @param board Papan permainan
@@ -128,10 +147,10 @@ void makeAIMove(char board[], char *aiPos, Difficulty difficulty) {
         findEasyMove(board, aiPos);
         break;
     case MEDIUM:
-        findMediumMove(board, aiPos);
+        findMediumMove(board, aiPos, 75);
         break;
     case HARD:
-        findEasyMove(board, aiPos); // NOTE! CHANGE LATER
+        findHardMove(board, aiPos);
         break;
     }
 }

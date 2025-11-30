@@ -11,11 +11,15 @@ add_executable(${PROJECT_NAME}
     src/ui.c
     src/core.c
     src/utils.c
+    src/bot.c
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
+
+install(TARGETS ddp_tictactoe
+    RUNTIME DESTINATION bin)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
     $<$<C_COMPILER_ID:GNU>:-Wall -Wextra>

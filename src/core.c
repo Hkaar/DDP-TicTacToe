@@ -11,7 +11,7 @@
  */
 void initBoard(char board[]) {
     for (int i = 0; i < (BOARD_SIZE * BOARD_SIZE); i++) {
-        board[i] = '-';
+        board[i] = ' ';
     }
 }
 
@@ -83,7 +83,7 @@ bool check(char board[], char sign) {
 bool checkTie(char board[]) {
     for (int i = 0; i < (BOARD_SIZE * BOARD_SIZE); i++)
     {
-        if (board[i] == '-') {
+        if (board[i] == ' ') {
             return false;
         }
         

@@ -5,6 +5,7 @@
 
 #include "core.h"
 #include "utils.h"
+#include "bot.h"
 
 void printLogo();
 void gameMenu();
@@ -55,10 +56,13 @@ void mainMenu() {
 }
 
 void gameMenu() {
+    clear_console();
+
     char board[BOARD_SIZE * BOARD_SIZE];
     char sign = 'x';
 
     bool ai = false;
+    Difficulty difficulty = EASY;
 
     int points[2] = {0, 0};
 
@@ -68,14 +72,46 @@ void gameMenu() {
     char *player2 = input("Masukkan nama Player 2 (O): ", 64);
     player2[strcspn(player2, "\n")] = '\0';
 
+    clear_console();
+
     char temp = 'n';
 
-    printf("\nApakah ingin bermain dengan Komputer (O)? (y/n): ");
+    printf("Apakah ingin bermain dengan Komputer (O)? (y/n): ");
     scanf(" %c", &temp);
     getchar();
 
-    if (temp == 'y') {
+    if (temp == 'y' || temp == 'Y') {
         ai = true;
+        
+        int diff;
+        printf("\nPilih tingkat kesulitan:\n");
+        printf("1. Mudah (Easy)\n");
+        printf("2. Sedang (Medium)\n");
+        printf("3. Sulit (Hard - Tidak Terkalahkan!)\n");
+        printf("\nPilihan (1-3)? ");
+        scanf("%d", &diff);
+        getchar();
+        
+        switch (diff) {
+            case 1:
+                difficulty = EASY;
+                printf("\n\033[1;32mMode: MUDAH - AI bermain acak\033[0m\n");
+                break;
+            case 2:
+                difficulty = MEDIUM;
+                printf("\n\033[1;33mMode: SEDANG - AI akan memblokir dan menyerang\033[0m\n");
+                break;
+            case 3:
+                difficulty = HARD;
+                printf("\n\033[1;31mMode: SULIT - AI tidak bisa dikalahkan!\033[0m\n");
+                break;
+            default:
+                difficulty = MEDIUM;
+                printf("\n\033[1;33mMode: SEDANG (default)\033[0m\n");
+        }
+        
+        printf("\nPress Enter to start...");
+        getchar();
     }
 
     bool loopRun = true;
@@ -142,12 +178,8 @@ void gameMenu() {
 
                 if (ai && sign == 'x') {
                     char aiPos[3];
-                    bool validMove = false;
-
-                    while (!validMove) {
-                        sprintf(aiPos, "%d%d", randint(3) + 1, randint(3) + 1);
-                        validMove = place(board, 'o', aiPos);
-                    }
+                    makeAIMove(board, aiPos, difficulty);
+                    place(board, 'o', aiPos);
 
                     if (check(board, 'o')) {
                         clear_console();

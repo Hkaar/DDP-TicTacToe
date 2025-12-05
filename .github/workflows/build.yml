@@ -31,12 +31,10 @@ jobs:
       with:
         cmake-version: '3.12'
 
-    - name: List directory contents
+    - name: Create build and install directories
       run: |
-        echo "Current directory:"
-        pwd
-        echo "Directory contents:"
-        ls -la
+        mkdir -p build
+        mkdir -p install
     
     - name: Configure CMake
       run: cmake -S . -B build -DCMAKE_INSTALL_PREFIX=./install

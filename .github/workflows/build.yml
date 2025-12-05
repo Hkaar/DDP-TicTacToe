@@ -29,7 +29,7 @@ jobs:
     - name: Setup CMake
       uses: jwlawson/actions-setup-cmake@v2
       with:
-        cmake-version: '3.12'
+        cmake-version: '3.20'
 
     - name: Create build and install directories
       run: |
@@ -37,7 +37,7 @@ jobs:
         mkdir -p install
     
     - name: Configure CMake
-      run: cmake -S . -B build -DCMAKE_INSTALL_PREFIX=./install
+      run: cmake -S . -B build -DCMAKE_INSTALL_PREFIX="${PWD}/install"
     
     - name: Build
       run: cmake --build build --config Release

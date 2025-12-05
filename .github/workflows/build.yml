@@ -30,6 +30,13 @@ jobs:
       uses: jwlawson/actions-setup-cmake@v2
       with:
         cmake-version: '3.12'
+
+    - name: List directory contents
+      run: |
+        echo "Current directory:"
+        pwd
+        echo "Directory contents:"
+        ls -la
     
     - name: Configure CMake
       run: cmake -S . -B build -DCMAKE_INSTALL_PREFIX=./install

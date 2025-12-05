@@ -1,12 +1,12 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 #define BOARD_SIZE 3
 
 /**
  * Menginisialisasi papan dengan karaker '-'
- * 
+ *
  * @param board Array papan untuk dipenuhi
  */
 void initBoard(char board[]) {
@@ -17,7 +17,7 @@ void initBoard(char board[]) {
 
 /**
  * Menaruh tanda player ke dalam papan
- * 
+ *
  * @param board Papan koordinat permainan
  * @param sign Tanda player yang akan digunakan
  * @param signPos Posisi tanda yang ingin ditempatkan
@@ -44,7 +44,7 @@ bool place(char board[], char sign, char signPos[]) {
 
 /**
  * Mengecek apakah ada 3 tanda yang sama dalam segaris
- * 
+ *
  * @param board Papan koordinat yang akan dicek
  * @param sign Tanda yang akan digunakan untuk perbandingan
  */
@@ -77,16 +77,14 @@ bool check(char board[], char sign) {
 
 /**
  * Mengecek apakah papan penuh untuk menyatakan setara
- * 
+ *
  * @param board Papan permainan
  */
 bool checkTie(char board[]) {
-    for (int i = 0; i < (BOARD_SIZE * BOARD_SIZE); i++)
-    {
+    for (int i = 0; i < (BOARD_SIZE * BOARD_SIZE); i++) {
         if (board[i] == ' ') {
             return false;
         }
-        
     }
 
     return true;

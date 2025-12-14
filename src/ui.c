@@ -13,6 +13,9 @@ void helpMenu();
 void secretMenu();
 void drawBoard(char board[]);
 
+/**
+ * Main menu for the game
+ */
 void mainMenu() {
     bool running = true;
 
@@ -55,6 +58,9 @@ void mainMenu() {
     }
 }
 
+/**
+ * Game menu for the game
+ */
 void gameMenu() {
     clear_console();
 
@@ -247,6 +253,9 @@ void gameMenu() {
     free(player2);
 }
 
+/**
+ * Draw the board
+ */
 void drawBoard(char board[]) {
     printf("=================\n");
     printf("| # | 1 | 2 | 3 |\n");
@@ -265,6 +274,9 @@ void drawBoard(char board[]) {
     printf("=================\n");
 }
 
+/**
+ * Help menu for the game
+ */
 void helpMenu() {
     clear_console();
     printf("===============================================================\n");

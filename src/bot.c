@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 
 #include "core.h"
 #include "utils.h"
@@ -31,7 +32,103 @@ void indexToPos(int idx, char *pos) {
     sprintf(pos, "%d%d", row, col);
 }
 
+/**
+ * Mendapatkan index ke array Papan dari posisi
+ * 
+ * @param row Baris posisi
+ * @param col Kolumn posisi
+ */
 int getBoardIndex(int row, int col) { return (row - 1) * 3 + (col - 1); }
+
+/**
+ * Memeriksa apakah ada pemenang di papan
+ * 
+ * @param board Papan permainan
+ * @return 'o' jika AI menang, 'x' jika pemain menang, '\0' jika tidak ada pemenang
+ */
+char checkWinner(char board[]) {
+    // Kombinasi posisi menang
+    int winPos[][3] = {
+        {0, 1, 2}, {3, 4, 5}, {6, 7, 8}, // Baris
+        {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, // Kolom
+        {0, 4, 8}, {2, 4, 6}             // Diagonal
+    };
+    
+    for (int i = 0; i < 8; i++) {
+        if (board[winPos[i][0]] == board[winPos[i][1]] && 
+            board[winPos[i][1]] == board[winPos[i][2]]) {
+            if (board[winPos[i][0]] == 'x' || board[winPos[i][0]] == 'o') {
+                return board[winPos[i][0]];
+            }
+        }
+    }
+    return '\0';
+}
+
+/**
+ * Memeriksa apakah papan sudah penuh
+ * 
+ * @param board Papan permainan
+ * @return true jika papan penuh, false jika masih ada ruang kosong
+ */
+bool isBoardFull(char board[]) {
+    for (int i = 0; i < 9; i++) {
+        if (board[i] != 'x' && board[i] != 'o') {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Algoritma minimax untuk menentukan langkah terbaik
+ * 
+ * @param board Papan permainan
+ * @param isMaximizing true jika giliran AI (maksimalisasi), false jika giliran pemain (minimisasi)
+ * @return Skor dari posisi papan saat ini
+ */
+int minimax(char board[], bool isMaximizing) {
+    char winner = checkWinner(board);
+    
+    // Kondisi terminal
+    if (winner == 'o') return 10;  // AI menang
+    if (winner == 'x') return -10; // Pemain menang
+    if (isBoardFull(board)) return 0; // Seri
+    
+    if (isMaximizing) {
+        // Giliran AI - maksimalkan skor
+        int maxScore = INT_MIN;
+        
+        for (int i = 0; i < 9; i++) {
+            if (board[i] != 'x' && board[i] != 'o') {
+                char original = board[i];
+                board[i] = 'o';
+                
+                int score = minimax(board, false);
+                maxScore = (score > maxScore) ? score : maxScore;
+                
+                board[i] = original; // Undo move
+            }
+        }
+        return maxScore;
+    } else {
+        // Giliran pemain - minimalkan skor
+        int minScore = INT_MAX;
+        
+        for (int i = 0; i < 9; i++) {
+            if (board[i] != 'x' && board[i] != 'o') {
+                char original = board[i];
+                board[i] = 'x';
+                
+                int score = minimax(board, true);
+                minScore = (score < minScore) ? score : minScore;
+                
+                board[i] = original; // Undo move
+            }
+        }
+        return minScore;
+    }
+}
 
 /**
  * Algoritma random untuk memilih posisi (dipakai untuk mode Easy pada AI)
@@ -50,12 +147,12 @@ void findEasyMove(char board[], char *aiPos) {
 }
 
 /**
- * Algoritma yang berusaha untuk mengalahkan dan menyusahkan pemain (dipakai
- * untuk mode Medium pada)
+ * Algoritma yang berusaha untuk mengalahkan dan menyusahkan 
+ * pemain (dipakai untuk mode Medium)
  * 
  * @param board Papan permainan
  * @param aiPos Pointer posisi ai yang akan di return
- * @param rSeed Random seed for setting if the algorithm will use random chance
+ * @param rSeed Random seed untuk error rate algo
  */
 void findMediumMove(char board[], char *aiPos, int rSeed) {
     if (rSeed != NULL && rSeed > 100) rSeed = 100;
@@ -63,7 +160,7 @@ void findMediumMove(char board[], char *aiPos, int rSeed) {
     if (rSeed != NULL) {
         int dSeed = randint(100);
 
-        if (dSeed > 70) {
+        if (dSeed > rSeed) {
             findEasyMove(board, aiPos);
             return;
         }   
@@ -131,14 +228,38 @@ void findMediumMove(char board[], char *aiPos, int rSeed) {
  * @param aiPos Pointer posisi ai yang akan di return
  */
 void findHardMove(char board[], char *aiPos) {
-    findMediumMove(board, aiPos, 90); // TODO! CHANGE TO USE MINIMAX
+    int bestScore = INT_MIN;
+    int bestMove = -1;
+    
+    // Evaluasi semua langkah yang mungkin
+    for (int i = 0; i < 9; i++) {
+        if (board[i] != 'x' && board[i] != 'o') {
+            char original = board[i];
+            board[i] = 'o';
+            
+            int score = minimax(board, false);
+            
+            board[i] = original; // Undo move
+            
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = i;
+            }
+        }
+    }
+    
+    if (bestMove != -1) {
+        indexToPos(bestMove, aiPos);
+    } else {
+        findEasyMove(board, aiPos);
+    }
 }
 
 /**
  * Dapatkan posisi dari komputer (AI) berdasarkan tingkatan kesusahan
  *
- * @param board Papan permainan
- * @param Pointer posisi ai yang akan di return
+ * @param board Papan 
+ * @param Pointer posisi ai yang akan permainann di return
  * @param difficulty Tingkat kesusahan AI
  */
 void makeAIMove(char board[], char *aiPos, Difficulty difficulty) {

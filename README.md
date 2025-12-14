@@ -11,7 +11,17 @@ $$$$$$$$\ $$\        $$$$$$$$\               $$$$$$$$\
    \__|   \__| \_______|\__| \_______| \_______|\__| \______/  \_______|
 ```
 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Hkaar/DDP-TicTacToe/build.yml)
+![GitHub License](https://img.shields.io/github/license/Hkaar/DDP-TicTacToe)
+![Release](https://img.shields.io/github/v/release/Hkaar/DDP-TicTacToe)
+
 A TicTacToe game programmed in C!
+
+## Features
+
+- 3 Tiered difficulty AI
+- Fully functioning implementation of Tic Tac Toe
+- Cross platform (Linux & Windows)
 
 ## Requirements
 
@@ -43,7 +53,6 @@ Run the build script
 `bash`
 
 ```bash
-chmod +x build.sh
 ./build.sh
 ```
 
@@ -58,6 +67,10 @@ Run the executable
 `bash`
 
 ```bash
-chmod +x run.sh
 ./run.sh
 ```
+
+## Resources
+
+- [Documentation](www.google.com)
+- [License](https://github.com/Hkaar/DDP-TicTacToe/blob/main/LICENSE.md)

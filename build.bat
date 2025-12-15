@@ -1,5 +1,14 @@
 @echo off
 
+REM Handle clean option
+if "%1"=="clean" (
+    echo Cleaning build directories...
+    if exist build rmdir /s /q build
+    if exist install rmdir /s /q install
+    echo Clean complete.
+    goto :eof
+)
+
 REM Create directories if they don't exist
 if not exist build mkdir build
 if not exist install mkdir install

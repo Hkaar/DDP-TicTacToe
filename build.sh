@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Handle clean option
+if [ "$1" == "clean" ]; then
+    echo "Cleaning build directories..."
+    rm -rf build
+    rm -rf install
+    echo "Clean complete."
+    exit 0
+fi
+
 # Create directories if they don't exist
 mkdir -p build
 mkdir -p install
@@ -13,6 +22,4 @@ cmake --build build
 # Install to the install directory
 cmake --install build
 
-echo
-read -p "Press [Enter] to continue..."
-clear
+echo "Build complete! Executable is in the install/bin directory."

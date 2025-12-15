@@ -8,4 +8,6 @@ void clear_console();
 
 int randint(int n);
 
+void slow_print(const char *str, int delay);
+
 #endif

@@ -3,6 +3,21 @@
 #include <stdlib.h>
 #include <assert.h>
 
+// Include appropriate header for sleep function
+#ifdef _WIN32
+#include <windows.h>
+// Define a cross-platform sleep function for milliseconds
+void sleep_ms(int milliseconds) {
+    Sleep(milliseconds);
+}
+#else
+#include <unistd.h>
+// Define a cross-platform sleep function for milliseconds (POSIX usleep takes microseconds)
+void sleep_ms(int milliseconds) {
+    usleep(milliseconds * 1000);
+}
+#endif
+
 /**
  * Fetches input from stdin
  */
@@ -61,5 +76,13 @@ int randint(int n) {
         while ((r = rand()) >= end);
 
         return r % n;
+    }
+}
+
+void slow_print(const char *str, int delay) {
+    for (size_t i = 0; str[i] != '\0'; i++) {
+        printf("%c", str[i]);
+        fflush(stdout); // Ensure the character is printed immediately
+        sleep_ms(delay); // Delay between characters
     }
 }

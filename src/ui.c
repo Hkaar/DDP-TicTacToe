@@ -336,6 +336,6 @@ void printLogo() {
 
 void secretMenu() {
     clear_console();
-    printf("A WIP\n");
+    slow_print("WELLCOME TO THE SECRET MENU\n", 100);
     getchar();
 }

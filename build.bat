@@ -23,5 +23,4 @@ REM Install to the install directory (Release configuration)
 cmake --install build --config Release
 
 echo Build complete! Executable is in the install/bin directory.
-
-cls
+pause

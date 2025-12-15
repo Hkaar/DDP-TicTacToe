@@ -1,7 +1,6 @@
 @echo off
 
-build.bat
-
+call build.bat
 REM Run the executable
 install\bin\ddp_tictactoe.exe
 

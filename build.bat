@@ -13,6 +13,6 @@ cmake --build build --config Release
 REM Install to the install directory (Release configuration)
 cmake --install build --config Release
 
-echo.
 echo Build complete! Executable is in the install/bin directory.
-pause
+
+cls

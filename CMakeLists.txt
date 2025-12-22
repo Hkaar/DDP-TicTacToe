@@ -21,7 +21,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE m)
+# target_link_libraries(${PROJECT_NAME} PRIVATE m)
 
 install(TARGETS ddp_tictactoe
     RUNTIME DESTINATION bin)

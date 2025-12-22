@@ -6,6 +6,8 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 project(ddp_tictactoe VERSION 1.0.0 LANGUAGES C)
 
+add_compile_definitions(_DEFAULT_SOURCE)
+
 add_executable(${PROJECT_NAME}
     src/main.c
     src/ui.c
@@ -18,6 +20,8 @@ add_executable(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
+
+target_link_libraries(${PROJECT_NAME} PRIVATE m)
 
 install(TARGETS ddp_tictactoe
     RUNTIME DESTINATION bin)

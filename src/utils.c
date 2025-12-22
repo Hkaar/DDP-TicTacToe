@@ -11,6 +11,7 @@ void sleep_ms(int milliseconds) {
     Sleep(milliseconds);
 }
 #else
+#define _DEFAULT_SOURCE
 #include <unistd.h>
 // Define a cross-platform sleep function for milliseconds (POSIX usleep takes microseconds)
 void sleep_ms(int milliseconds) {

@@ -12,6 +12,7 @@ add_executable(${PROJECT_NAME}
     src/core.c
     src/utils.c
     src/bot.c
+    src/audio.c
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
